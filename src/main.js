@@ -6,6 +6,8 @@ import router from './router'
 import store from './store'
 import 'swiper/dist/css/swiper.css'
 import VueLazyload from 'vue-lazyload'
+import MintUi from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
 Vue.config.productionTip = false
 
@@ -18,6 +20,7 @@ Vue.use(VueLazyload, {
   loading: 'http://img.lanrentuku.com/img/allimg/1212/5-121204193R5-50.gif',
   attempt: 1
 })
+Vue.use(MintUi)
 
 router.beforeEach(function (to,from,next) {
   document.title = to.meta.title

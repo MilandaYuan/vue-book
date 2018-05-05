@@ -31,3 +31,12 @@ export  let addBook = (data)=>{
 export let pagination = (offset)=>{
     return axios.get(`/page?offset=${offset}`)
 }
+export let increaseCount = (id)=>{
+  return axios.post(`/cart?id=${id}`)
+}
+export let getCartList = ()=>{
+  return axios.get('/cart')
+}
+export let decreaseCount = (id)=>{
+  return axios.delete(`/cart?id=${id}`)
+}

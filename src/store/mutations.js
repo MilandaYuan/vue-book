@@ -1,26 +1,54 @@
 import * as Types from './mutations-type'
 
 let mutations = {
-  [Types.ADD_TO_CART](state, book) {
-    let bookToBeAdded = state.cartList.find(item => item.bookId === book.bookId);
+  [Types.GET_CART_LIST](state, books) {
+    state.cartList = books
+  },
+
+  [Types.INCREASE_COUNT](state, book) {
+    let bookToBeAdded = state.cartList.find(item => item.bookId === book.bookId)
     if (bookToBeAdded) {
-      bookToBeAdded.bookCount += 1;
-      state.cartList = [...state.cartList]
+      state.cartList = state.cartList.map(item => {
+        if (item.bookId === book.bookId) {
+          book.isChecked = item.isChecked;
+          return book
+        }
+        return item
+      })
     } else {
-      book.bookCount = 1;
       state.cartList = [...state.cartList, book]
     }
   },
-  [Types.REDUCE_COUNT](state, book) {
-    let bookToBeReduced = state.cartList.find(item => item.bookId === book.bookId)
-    if (bookToBeReduced.bookCount < 1) return
-    bookToBeReduced.bookCount -= 1
-    state.cartList = [...state.cartList]
+
+  [Types.DECREASE_COUNT](state, book) {
+    let bookToBeAdded = state.cartList.find(item => item.bookId === book.bookId)
+    if (bookToBeAdded) {
+      state.cartList = state.cartList.map(item => {
+        if (item.bookId === book.bookId) {
+          return book
+        }
+        return item
+      })
+    }
   },
-  [Types.INCREASE_COUNT](state, book) {
-    let bookToBeIncreased = state.cartList.find(item => item.bookId === book.bookId)
-    bookToBeIncreased.bookCount += 1
-    state.cartList = [...state.cartList]
+
+  [Types.CHECK_SINGLE](state, id) {
+    state.cartList = state.cartList.map(item => {
+      if (item.bookId === id) {
+        item.isChecked = !item.isChecked;
+        return item
+      }
+      return item
+    })
   },
+  [Types.CHECK_ALL](state, val) {
+    state.cartList = state.cartList.map(item => {
+      item.isChecked = val;
+      return item
+    })
+  },
+  [Types.DELETE_BOOK_IN_CARTLIST](state, id) {
+    state.cartList = state.cartList.filter(item=>item.bookId!==id)
+  }
 };
 export default mutations

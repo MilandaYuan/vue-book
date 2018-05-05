@@ -13,7 +13,7 @@
             <b>{{book.bookPrice}}</b>
             <div>
               <button @click.stop="remove(book.bookId)">删除</button>
-              <button @click.stop="addToCart(book)">添加</button>
+              <button @click.stop="addToCart(book.bookId)">添加</button>
             </div>
 
           </div>
@@ -95,8 +95,9 @@
     },
 
     methods: {
-      addToCart(book){
-        this.$store.commit(Types.ADD_TO_CART,book)
+      addToCart(id){
+        //this.$store.commit(Types.ADD_TO_CART,book)
+        this.$store.dispatch('increaseCount',id)
       },
       async loadMore() {
         clearTimeout(this.timer)

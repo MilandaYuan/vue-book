@@ -3,10 +3,8 @@
     <MHeader>购物车</MHeader>
     <div class="content">
       <ul>
-        <li v-for="(book,index) in cartList">
-          <div class="checkbox-container">
-            <input type="checkbox">
-          </div>
+        <mt-cell-swipe v-for="book in cartList" :key="book.bookId" :right="handleRightButton(book.bookId)" class="cart-cell-swipe">
+          <input type="checkbox" v-model="book.isChecked" class="checkbox" @click = 'checkSingle(book.bookId)'>
           <div class="img-container">
             <img v-lazy="book.bookCover" alt="">
           </div>
@@ -14,49 +12,51 @@
             <div>
               <h3>{{book.bookName}}</h3>
               <p>{{book.bookInfo}}</p>
-
             </div>
             <div class="info-number-container">
               <b>￥{{book.bookPrice}}</b>
               <div>
-                <button @click.stop="reduceCount(book)">-</button>
-                {{book.bookCount}}
-                <button @click.stop='increaseCount(book)'>+</button>
+                <button @click.stop="decreaseCount(book.bookId)">-</button>
+                {{book.cartCount}}
+                <button @click.stop='increaseCount(book.bookId)'>+</button>
               </div>
             </div>
 
           </div>
-        </li>
+        </mt-cell-swipe>
       </ul>
-
-
     </div>
+
     <div class="total-container">
-      <div class="checkAll">
-        <input type="checkbox">全选
-      </div>
-      <div>
+        <div class="checkAll"><input type="checkbox"   v-model="isCheckedAll" @click = 'checkAll'></div>
+      <span>全选</span>
+      <div class="sum">
         合计：{{total | toFixed(2)}}
         <button>结算</button>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
   import MHeader from '../base/MHeader'
   import * as Types from '../store/mutations-type'
-  import {mapState, mapGetters} from 'vuex'
+  import {mapState, mapGetters} from 'vuex';
 
   export default {
     name: "collect",
-    filters:{
-      toFixed(number,param){
-        return '￥'+number.toFixed(param)
+    filters: {
+      toFixed(number, param) {
+        return '￥' + number.toFixed(param)
       }
+    },
+    created() {
+      this.getCartList();
     },
     data() {
       return {
+        isCheckedAll:false
         // cartList: this.$store.state.cartList,
       }
     },
@@ -65,37 +65,62 @@
       ...mapState(['cartList'])
     },
     methods: {
-      reduceCount(book) {
-        this.$store.commit(Types.REDUCE_COUNT, book)
+      getCartList() {
+        this.$store.dispatch('getCartList')
       },
-      increaseCount(book) {
-        this.$store.commit(Types.INCREASE_COUNT, book)
+      increaseCount(id) {
+        this.$store.dispatch('increaseCount', id)
       },
+      decreaseCount(id) {
+        this.$store.dispatch('decreaseCount', id)
+      },
+      checkSingle(id){
+        this.$store.commit(Types.CHECK_SINGLE,id)
+        this.isCheckedAll = this.cartList.every(item=>item.isChecked)
+      },
+      checkAll(){
+        this.isCheckedAll = !this.isCheckedAll;
+        this.$store.commit(Types.CHECK_ALL,this.isCheckedAll)
+      },
+      deleteBookInCartList(id){
+        this.$store.commit('DELETE_BOOK_IN_CARTLIST',id)
+      },
+      handleRightButton(id){
+        return [{
+          content: 'Delete',
+          style: { background: 'red', color: '#fff', width: '50px' },
+          handler: () => this.deleteBookInCartList(id)
+        }]
+      }
     },
     components: {
       MHeader
     },
-    mounted(){
+    mounted() {
       console.log('lalala')
     },
-    watch: {
-      cartList:function(newList, oldList){
-        console.log('hahah')
-        console.log(newList)
-      },
-    }
+
   }
 </script>
 
+<style>
+  .mint-cell-wrapper .mint-cell-value{
+    color: black;
+    align-items: stretch;
+  }
+</style>
+
 <style scoped lang="less">
   .content {
+    bottom:100px;
     ul {
-      padding: 10px;
-      li {
+      padding: 0 2.5% 0 2.5%;
+      .cart-cell-swipe {
+
         display: flex;
         padding: 15px 0;
         border-bottom: 1px solid #ccc;
-        .checkbox-container {
+        .checkbox {
           width: 10%;
           -webkit-appearance: checkbox;
         }
@@ -125,20 +150,28 @@
   }
 
   .total-container {
-    .checkAll {
-      -webkit-appearance: checkbox;
-      height: 100%;
-    }
     background: white;
-    padding: 10px;
+    margin:  0 2.5% 0 2.5%;
+    padding:0 10px;
     display: flex;
-    justify-content: space-between;
-    height: 30px;
-    line-height: 30px;
-    width: 100%;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    width: calc( 95% - 20px);
     position: fixed;
     bottom: 50px;
     border-top: 1px solid #ccc;
+    .checkAll {
+      width: 10%;
+      -webkit-appearance: checkbox;
+    }
+    span{
+      width: 10%;
+    }
+    .sum{
+      width: 80%;
+      text-align: right;
+    }
 
   }
 </style>

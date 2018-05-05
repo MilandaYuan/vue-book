@@ -29,7 +29,7 @@ http.createServer((req, res) => {
   //console.log(req)
   if (pathname === '/sliders') {
     res.setHeader('Content-Type', ' application/json;charset=utf-8');
-    return  res.end(JSON.stringify(sliders))
+    return res.end(JSON.stringify(sliders))
   }
 
   if (pathname === '/hot') {
@@ -40,14 +40,14 @@ http.createServer((req, res) => {
     })
   }
   let pageSize = 5
-  if(pathname ==='/page'){
+  if (pathname === '/page') {
     let offset = parseInt(query.offset) || 0;
     read(function (books) {
-      let result = books.reverse().slice(offset,offset+pageSize);
+      let result = books.reverse().slice(offset, offset + pageSize);
       let hasMore = true;
-      if(books.length<=offset+pageSize) hasMore=false;
+      if (books.length <= offset + pageSize) hasMore = false;
       res.setHeader('Content-Type', 'application/json;charset=utf-8');
-      res.end(JSON.stringify({hasMore,books:result}))
+      res.end(JSON.stringify({hasMore, books: result}))
     })
   }
   if (pathname === '/book') {
@@ -70,19 +70,19 @@ http.createServer((req, res) => {
         break
       case 'PUT':
         let str = ''
-        req.on('data',chunk=>{
-          str+=chunk
+        req.on('data', chunk => {
+          str += chunk
         });
-        req.on('end',()=>{
+        req.on('end', () => {
           let book = JSON.parse(str)
           read(function (books) {
-            books = books.map(item=>{
-              if(item.bookId===id){
+            books = books.map(item => {
+              if (item.bookId === id) {
                 return book
               }
               return item
             })
-            write(books,function () {
+            write(books, function () {
               res.end(JSON.stringify(book))
             })
           })
@@ -90,15 +90,17 @@ http.createServer((req, res) => {
         break
       case 'POST':
         let addStr = '';
-        req.on('data',chunk=>{
-          addStr+=chunk
+        req.on('data', chunk => {
+          addStr += chunk
         })
-        req.on('end',function () {
+        req.on('end', function () {
           let book = JSON.parse(addStr);
           read(function (books) {
-            book.bookId = books.length?books[books.length-1].bookId+1:1
+            book.bookId = books.length ? books[books.length - 1].bookId + 1 : 1;
+            book.cartCount =0;
+            book.isChecked = false
             books.push(book)
-            write(books,function () {
+            write(books, function () {
               res.end(JSON.stringify(book))
             })
           })
@@ -113,6 +115,51 @@ http.createServer((req, res) => {
         })
         break;
 
+    }
+  }
+  if (pathname === '/cart') {
+    let id = parseInt(query.id)
+    switch (req.method) {
+      case 'GET':
+        read(function (books) {
+          let cartList = books.filter(item=> item.cartCount>0)
+          res.end(JSON.stringify(cartList))
+        })
+        break
+      case 'POST':
+        read(function (books) {
+          let book = ''
+          books = books.map(item => {
+            if (item.bookId === id) {
+              book = item
+              book.cartCount++;
+              return book
+            }
+            return item
+          })
+          write(books, function () {
+            res.end(JSON.stringify(book))
+          })
+        })
+        break;
+      case 'DELETE':
+        read(function (books) {
+          let book = ''
+          books = books.map(item => {
+            if (item.bookId === id) {
+              book = item;
+              if(book.cartCount>1){
+                book.cartCount--;
+              }
+              return book
+            }
+            return item
+          })
+          write(books, function () {
+            res.end(JSON.stringify(book))
+          })
+        })
+        break
     }
   }
 
