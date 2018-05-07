@@ -4,30 +4,30 @@
     <ul>
       <li>
         <label for="bookName">书的名字</label>
-        <input type="text" v-model="book.bookName" id="bookName">
+        <input class="text-input" type="text" v-model="book.bookName" id="bookName">
       </li>
       <li>
         <label for="bookInfo">书的介绍</label>
-        <input type="text" v-model="book.bookInfo" id="bookInfo">
+        <input class="text-input" type="text" v-model="book.bookInfo" id="bookInfo">
       </li>
       <li>
         <label for="bookCover">书的封面</label>
-        <input type="text" v-model="book.bookCover" id="bookCover">
+        <input class="text-input" type="text" v-model="book.bookCover" id="bookCover">
       </li>
       <li>
         <label for="bookPrice">书的价格</label>
-        <input type="text" v-model.number="book.bookPrice" id="bookPrice">
+        <input class="text-input" type="text" v-model.number="book.bookPrice" id="bookPrice">
       </li>
       <li>
-        <button @click="add">确认添加</button>
+        <button class="button" @click="add">确认添加</button>
+
       </li>
-
-
     </ul>
+
   </div>
 </template>
 
-<script>
+  <script>
   import MHeader from '../base/MHeader';
   import {addBook} from "../api";
 
@@ -35,7 +35,8 @@
     name: "add",
     data(){
       return{
-        book:{}
+        book:{},
+        isChecked:false
       }
     },
     methods:{

@@ -12,15 +12,15 @@
             <p>{{book.bookInfo}}</p>
             <b>{{book.bookPrice}}</b>
             <div>
-              <button @click.stop="remove(book.bookId)">删除</button>
-              <button @click.stop="addToCart(book.bookId)">添加</button>
+              <button class="button" @click.stop="remove(book.bookId)">删除</button>
+              <button class="button" @click.stop="addToCart(book.bookId)">添加</button>
             </div>
 
           </div>
         </router-link>
       </ul>
-      <div @click='getData' v-if="hasMore">加载更多</div>
-      <div v-else>没有了</div>
+      <div @click='getData' v-if="hasMore" class="loading">正在加载...</div>
+      <div v-else class="no-more">没有啦~~</div>
     </div>
   </div>
 </template>
@@ -151,10 +151,18 @@
           b {
             color: orange;
           }
+
         }
 
       }
     }
-
+    .loading  {
+      text-align: center;
+      color: gray;
+    }
+    .no-more{
+      text-align: center;
+      color: gray;
+    }
   }
 </style>

@@ -3,8 +3,9 @@
     <MHeader>购物车</MHeader>
     <div class="content">
       <ul>
-        <mt-cell-swipe v-for="book in cartList" :key="book.bookId" :right="handleRightButton(book.bookId)" class="cart-cell-swipe">
-          <input type="checkbox" v-model="book.isChecked" class="checkbox" @click = 'checkSingle(book.bookId)'>
+        <mt-cell-swipe v-for="book in cartList" :key="book.bookId" :right="handleRightButton(book.bookId)" class="cart-cell-swipe ">
+          <p-check :checked="book.isChecked" class="checkbox p-default p-round" @change = 'checkSingle(book.bookId)'>
+          </p-check>
           <div class="img-container">
             <img v-lazy="book.bookCover" alt="">
           </div>
@@ -12,13 +13,14 @@
             <div>
               <h3>{{book.bookName}}</h3>
               <p>{{book.bookInfo}}</p>
+
             </div>
             <div class="info-number-container">
               <b>￥{{book.bookPrice}}</b>
               <div>
-                <button @click.stop="decreaseCount(book.bookId)">-</button>
+                <button class="numButton" @click.stop="decreaseCount(book.bookId)">-</button>
                 {{book.cartCount}}
-                <button @click.stop='increaseCount(book.bookId)'>+</button>
+                <button class="numButton" @click.stop='increaseCount(book.bookId)'>+</button>
               </div>
             </div>
 
@@ -28,11 +30,11 @@
     </div>
 
     <div class="total-container">
-        <div class="checkAll"><input type="checkbox"   v-model="isCheckedAll" @click = 'checkAll'></div>
+        <p-check class="checkAll p-default p-round"  :checked="isCheckedAll" @change = 'checkAll'></p-check>
       <span>全选</span>
       <div class="sum">
         合计：{{total | toFixed(2)}}
-        <button>结算</button>
+        <button class="totalButton">结算</button>
       </div>
     </div>
 
@@ -116,13 +118,12 @@
     ul {
       padding: 0 2.5% 0 2.5%;
       .cart-cell-swipe {
-
         display: flex;
         padding: 15px 0;
         border-bottom: 1px solid #ccc;
         .checkbox {
           width: 10%;
-          -webkit-appearance: checkbox;
+          height: 10%;
         }
         .img-container {
           width: 30%;
@@ -142,6 +143,12 @@
           .info-number-container {
             display: flex;
             justify-content: space-between;
+            .numButton{
+            background: transparent;
+              border: 1px solid #ccc;
+              padding:3px 10px;
+              width: 30px;
+            }
           }
         }
       }
@@ -163,7 +170,6 @@
     border-top: 1px solid #ccc;
     .checkAll {
       width: 10%;
-      -webkit-appearance: checkbox;
     }
     span{
       width: 10%;
@@ -171,7 +177,15 @@
     .sum{
       width: 80%;
       text-align: right;
+      .totalButton{
+        background: darkorange;
+        border:none;
+        width: 50px;
+        height: 35px;
+        color:white;
+      }
     }
+
 
   }
 </style>

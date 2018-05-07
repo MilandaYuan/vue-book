@@ -8,6 +8,7 @@ import 'swiper/dist/css/swiper.css'
 import VueLazyload from 'vue-lazyload'
 import MintUi from 'mint-ui'
 import 'mint-ui/lib/style.css'
+import PrettyCheckbox from 'pretty-checkbox-vue'
 
 Vue.config.productionTip = false
 
@@ -21,6 +22,7 @@ Vue.use(VueLazyload, {
   attempt: 1
 })
 Vue.use(MintUi)
+Vue.use(PrettyCheckbox)
 
 router.beforeEach(function (to,from,next) {
   document.title = to.meta.title

@@ -25,6 +25,7 @@
 </script>
 
 <style>
+  @import 'pretty-checkbox/dist/pretty-checkbox.css';
   * {
     margin: 0;
     padding: 0;
@@ -38,9 +39,6 @@
     text-decoration: none;
   }
 
-  input, button {
-    -webkit-appearance: none;
-  }
 
   .content {
     position: fixed;
@@ -59,4 +57,16 @@
     transition: all 0.3s linear;
     opacity: 0;
   }
+.text-input{
+  border:1px solid #ccc;
+  border-radius: 2px;
+}
+  .button{
+    color: white;
+    background: darkorange;
+    padding: 5px 10px;
+    border:none;
+    border-radius: 4px;
+  }
+
 </style>

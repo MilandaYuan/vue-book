@@ -25,6 +25,7 @@ let mutations = {
     if (bookToBeAdded) {
       state.cartList = state.cartList.map(item => {
         if (item.bookId === book.bookId) {
+          book.isChecked = item.isChecked;
           return book
         }
         return item
@@ -33,6 +34,7 @@ let mutations = {
   },
 
   [Types.CHECK_SINGLE](state, id) {
+    console.log(11)
     state.cartList = state.cartList.map(item => {
       if (item.bookId === id) {
         item.isChecked = !item.isChecked;
